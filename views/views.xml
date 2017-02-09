@@ -1,0 +1,238 @@
+<openerp>
+  <data>
+    <!-- explicit list view definition -->
+
+    <record model="ir.ui.view" id="mapleorder.transformlist">
+      <field name="name">Create Mix</field>
+      <field name="model">mapleorder.transform</field>
+      <field name="arch" type="xml">
+          <tree>
+            <field name="transformedBy" />
+            <field name="transformedOn" />
+            <field name="grossweights" />
+            <field name="lumieres" />
+          </tree>
+      </field>
+    </record>
+    
+    <record model="ir.ui.view" id="mapleorder.transformlist2">
+      <field name="name">Fill Totes</field>
+      <field name="model">mapleorder.transform</field>
+      <field name="arch" type="xml">
+          <tree create="false" edit="false">
+            <field name="transformedBy" />
+            <field name="transformedOn" />
+            <field name="grossweights" />
+            <field name="lumieres" />
+          </tree>
+      </field>
+    </record>
+
+    <record model="ir.ui.view" id="mapleorder.transform_form">
+      <field name="name">Create Mix</field>
+      <field name="model">mapleorder.transform</field>
+      <field name="arch" type="xml">
+        <form>
+          <sheet>
+            <group>
+              <group>
+                <field name="transformedBy"/>
+                <field name="transformedOn"/>
+              </group>
+              <group>
+                <img class="img img-responsive" style="width:200px;height:135px;float:right" src="/mapleorder/static/src/img/header.jpg"/>
+              </group>
+            </group>
+
+            <group string="Source Barrels">
+              <field name="sourceList" widget="many2many" options="{'no_create': True}" domain="[('processStatus', '=', 'rated' ), ('transform', '=', False) ]"  > 
+                
+                <tree delete="false">
+                  
+                  <field name="transform" invisible="1" />
+                  <field name="full" invisible="1" />
+                  <field name="seal"/>
+                  <field name="type"/>
+                  <field name="grade" />
+                  <field name="nameproducer" />
+                  <field name="processStatus" />          
+                </tree>
+              </field>
+            </group>
+
+            <group string="Parameters">
+              <group>
+                <field name="grades"/>
+                <field name="lumieres"/>
+              </group>
+              <group>
+                <field name="grossweights"/>
+                <field name="brixs"/>
+              </group>
+            </group>
+          </sheet>
+        </form>
+      </field>
+    </record>
+
+
+    
+    <record model="ir.ui.view" id="mapleorder.prodtote_form">
+      <field name="name">Fill Totes</field>
+      <field name="model">mapleorder.transform</field>
+      <field name="arch" type="xml">
+        <form>
+          <sheet>
+            <group string="Parameters">
+              <group>
+                <field name="transformedBy" invisible="1"/> <!-- on doit spécifier ces champs pour qu'ils soient chargés en mémoire par Odoo -->
+                <field name="transformedOn" invisible="1"/>
+                <field name="grades" readonly="1"/>
+                <field name="lumieres" readonly="1"/>
+              </group>
+              <group>
+                <field name="grossweights"/>
+                <field name="brixs" readonly="1"/>
+              </group>
+            </group>
+
+            <group string="Produced Totes">
+              <field name="barrelList" widget="one2many" >
+                <tree edit="1" create="1" editable="1">
+                  <field name="grossweight" />
+                  <field name="processStatus" invisible="1"/>
+                  <field name="seal" />
+                  <field name="barrelNumber"/>
+                  <field name="full" invisible="1"/>
+                  <field name="tote" invisible="1"/>
+                  <field name="grade" invisible="1"/>
+                  <field name="transform" invisible="1"/>
+                  <field name="inspector" />
+                  <field name="inspectOn" />
+                  <field name="trans_inspectCntYear" invisible="1"/>
+                  <field name="trans_inspectCnt" invisible="1" />
+                  <field name="warehouse"/>
+                  <field name="row"/>
+                  <field name="lumiere"/>
+                  <field name="brix" />
+                </tree>
+              </field>
+            </group>
+          </sheet>
+        </form>
+      </field>
+    </record>
+
+
+    <record model="ir.ui.view" id="mapleorder.reportview">
+      <field name="name">Transformation Order Report</field>
+      <field name="model">mapleorder.transform</field>
+      <field name="arch" type="xml">
+        <pivot string="Transform Order Report" display_quantity="true">
+          <field name="transformedBy" type="row"/>
+          <field name="lumieres" type="col"/>
+        </pivot>
+      </field>
+    </record>
+
+    <record model="ir.ui.view" id="mapleorder.reporttoteview">
+      <field name="name">Tote Report</field>
+      <field name="model">mapleorder.barrel</field>
+      <field name="arch" type="xml">
+        <pivot string="Tote Report" display_quantity="true">
+          <field name="inspector" type="row"/>
+          <field name="warehouse" type="col"/>
+        </pivot>
+      </field>
+    </record>
+
+
+    
+    <!-- actions opening views on models -->
+
+
+    <record model="ir.actions.act_window" id="mapleorder.transform_action_window">
+      <field name="name">Create Syrup Mix</field>
+      <field name="res_model">mapleorder.transform</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+    <record model="ir.actions.act_window.view" id="mapleorder.transf_tree">
+      <field name="sequence" eval="2"/>
+      <field name="view_mode">tree</field>
+      <field name="act_window_id" ref="mapleorder.transform_action_window"/>
+      <field name="view_id" ref="mapleorder.transformlist"/>
+    </record>
+    <record model="ir.actions.act_window.view" id="mapleorder.transf_form">
+      <field name="sequence" eval="2"/>
+      <field name="view_mode">form</field>
+      <field name="act_window_id" ref="mapleorder.transform_action_window"/>
+      <field name="view_id" ref="mapleorder.transform_form"/>
+    </record>
+
+    <record model="ir.actions.act_window" id="mapleorder.transform2_action_window">
+      <field name="name">Fill Totes</field>
+      <field name="res_model">mapleorder.transform</field>
+      <field name="view_mode">tree, form</field>
+    </record>
+    <record model="ir.actions.act_window.view" id="mapleorder.transf_tree2">
+      <field name="sequence" eval="2"/>
+      <field name="view_mode">tree</field>
+      <field name="act_window_id" ref="mapleorder.transform2_action_window"/>
+      <field name="view_id" ref="mapleorder.transformlist"/>
+    </record>
+    <record model="ir.actions.act_window.view" id="mapleorder.transf_form2">
+      <field name="view_mode">form</field>
+      <field name="act_window_id" ref="mapleorder.transform2_action_window"/>
+      <field name="view_id" ref="mapleorder.prodtote_form"/>
+    </record>
+      
+    <record model="ir.actions.act_window" id="mapleorder.transformaction_barrellist2">
+      <field name="name">Inventory By Warehouse</field>
+      <field name="res_model">mapleorder.barrel</field>
+      <field name="view_mode">tree,form</field>
+      <field name="context">{'group_by':['warehouse', 'row']}</field>
+      <field name="view_id" ref="mapleorder.viewbarrel_warehouse"/>
+      <field name="domain">[('tote','=',True)]</field>
+    </record>
+    
+    <record model="ir.actions.act_window" id="mapleorder.reporttransformaction_window">
+      <field name="name">Transformation Order Report</field>
+      <field name="res_model">mapleorder.transform</field>
+      <field name="view_mode">pivot</field>
+      <field name="view_id" ref="mapleorder.reportview"/>
+    </record>
+    
+
+    <record model="ir.actions.act_window" id="mapleorder.reporttoteaction_window">
+      <field name="name">Tote Report</field>
+      <field name="res_model">mapleorder.barrel</field>
+      <field name="view_mode">pivot</field>
+      <field name="view_id" ref="mapleorder.reporttoteview"/>
+      <field name="domain">[('tote','=',True)]</field>
+    </record>
+
+    <!-- Top menu item -->
+
+    <menuitem name="Maple Syrup Transform" id="mapleorder.transform_menu_root" sequence="15"/>
+
+    <!-- menu categories -->
+
+    <!-- actions -->
+
+    <menuitem name="Create Mix" id="mapleorder.transform_menu_1_list" parent="mapleorder.transform_menu_root"
+              action="mapleorder.transform_action_window"/>
+
+    <menuitem name="Tote Production" id="mapleorder.transform_menu_2_list" parent="mapleorder.transform_menu_root"
+              action="mapleorder.transform2_action_window"/>
+    
+    <menuitem name="Inventory" id="mapleorder.transformmenu_26" parent="mapleorder.transform_menu_root" sequence="124"/>
+    <menuitem name="By Warehouse" id="mapleorder.transformmenu_261" parent="mapleorder.transformmenu_26"
+              action="mapleorder.transformaction_barrellist2" />
+
+    <menuitem name="Transformation Order Report" id="mapleorder.transformbarrel_1_list" parent="mapleorder.transform_menu_root"
+              action="mapleorder.reporttransformaction_window" sequence="125"/>
+    <menuitem name="Tote Report" id="mapleorder.transformbarrel_2_list" parent="mapleorder.transform_menu_root"
+              action="mapleorder.reporttoteaction_window" sequence="126"/>
+
+  </data>
+</openerp>
